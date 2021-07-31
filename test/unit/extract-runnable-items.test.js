@@ -275,16 +275,16 @@ describe('extractRunnableItems', function () {
             );
         });
 
-        it('should bail out if any of the given entrypoint is not found. ', function (done) {
+        it('should exclude non-existent entry points and return only valid items', function (done) {
             extractRunnableItems(
                 collection, {
-                    execute: ['ID3', 'RANDOM'],
+                    execute: ['RANDOM', 'F1.R1', 'F2.R1'],
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be.null;
-                    expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be.undefined;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F2.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
                 }
             );
